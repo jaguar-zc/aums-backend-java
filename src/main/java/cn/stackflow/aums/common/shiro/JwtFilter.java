@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -97,6 +98,14 @@ public class JwtFilter extends AccessControlFilter {
         if (log.isTraceEnabled()) {
             log.trace("onAccessDenied 方法被调用");
         }
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+        //这几句代码是关键
+        if ("OPTIONS".equals(request.getMethod())){
+            response.setStatus(HttpStatus.NO_CONTENT.value());;
+            log.info("OPTIONS 放行");
+            return true;
+        }
         onLoginFail(servletResponse);
         return false;
     }
@@ -108,6 +117,7 @@ public class JwtFilter extends AccessControlFilter {
         httpResponse.setStatus(result.getCode());
 //        httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         httpResponse.setContentType(CONTENT_TYPE_APPLICATION_JSON);
+        httpResponse.setHeader("Access-Control-Allow-Origin","*");
         httpResponse.getWriter().write(JSONUtils.object2Json(result));
     }
 }

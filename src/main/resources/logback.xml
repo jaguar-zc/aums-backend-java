@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="log.default_pattern" value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%+5level] [%t] [%+4line] [%X{user}] [%-30logger{5}] -  %msg%n"/>
+    <property name="log.default_max_history" value="14"/>
+    <property name="log.default_charset" value="UTF-8"/>
+
+    <appender name="assess" class="ch.qos.logback.core.ConsoleAppender" level="INFO">
+        <encoder>
+            <pattern>${log.default_pattern}</pattern>
+            <charset>${log.default_charset}</charset>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="assess"/>
+    </root>
+
+    <root level="debug">
+        <appender-ref ref="assess"/>
+    </root>
+
+</configuration>

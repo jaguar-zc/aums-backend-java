@@ -1,0 +1,29 @@
+spring:
+  datasource:
+#    driver-class-name: oracle.jdbc.driver.OracleDriver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username:
+    password:
+    url:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 50
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: DatebookHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: select 1
+#      connection-test-query: select 1 from dual
+  jackson:
+    serialization:
+      write-dates-as-timestamps: true
+  jpa:
+#    database-platform: org.hibernate.dialect.Oracle10gDialect
+    database-platform: org.hibernate.dialect.MySQL57Dialect
+    show-sql: true
+    hibernate:
+      format_sql: true
+      ddl-auto: update
+  token-expire: 86400

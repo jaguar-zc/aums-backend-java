@@ -1,0 +1,13 @@
+server:
+  port: 8000
+spring:
+  application:
+    name: aiinspector
+  profiles:
+    active: common,dev
+logging:
+  level:
+    root: INFO
+    com.xytai.aiinspector: TRACE
+#    org.springframework.web: TRACE
+    org.springframework.web: INFO

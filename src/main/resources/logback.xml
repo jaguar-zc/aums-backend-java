@@ -4,6 +4,7 @@
     <property name="log.default_pattern" value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%+5level] [%t] [%+4line] [%X{user}] [%-30logger{5}] -  %msg%n"/>
     <property name="log.default_max_history" value="14"/>
     <property name="log.default_charset" value="UTF-8"/>
+    <property name="log.home" value="/opt/logs/aums-backend-java"/>
 
     <appender name="assess" class="ch.qos.logback.core.ConsoleAppender" level="INFO">
         <encoder>
@@ -12,8 +13,37 @@
         </encoder>
     </appender>
 
+    <appender name="info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.home}/info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.home}/info.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>${log.default_max_history}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.default_pattern}</pattern>
+            <charset>${log.default_charset}</charset>
+        </encoder>
+    </appender>
+
+    <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <file>${log.home}/error.log</file>
+        <rollingPolicy  class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.home}/error.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>${log.default_max_history}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${log.default_pattern}</pattern>
+            <charset>${log.default_charset}</charset>
+        </encoder>
+    </appender>
+
     <root level="info">
         <appender-ref ref="assess"/>
+        <appender-ref ref="info"/>
+        <appender-ref ref="error"/>
     </root>
 
     <root level="debug">

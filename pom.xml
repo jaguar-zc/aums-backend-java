@@ -11,9 +11,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.xytai</groupId>
-    <artifactId>aums</artifactId>
+    <artifactId>aums-backend-java</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>aums</name>
+    <name>${project.artifactId}</name>
     <description>统一权限系统</description>
 
     <properties>

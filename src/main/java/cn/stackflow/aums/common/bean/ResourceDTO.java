@@ -18,6 +18,7 @@ public class ResourceDTO {
     private String id;      //id
     @JsonIgnore
     private String remark;  //资源描述
+    private String parentName;  //上级资源名称
     @JsonIgnore
     private Resource.ResourceType type;//资源类型： 分组、模块、操作
     @JsonIgnore

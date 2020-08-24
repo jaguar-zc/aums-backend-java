@@ -31,4 +31,14 @@ public class UserServiceTest {
         userDTO.setRoleList(Arrays.asList());
         userService.create(userDTO);
     }
+
+    @Test
+    public void testInitResource(){
+
+
+
+
+
+
+    }
 }

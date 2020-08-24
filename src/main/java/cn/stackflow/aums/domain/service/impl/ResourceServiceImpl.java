@@ -11,6 +11,7 @@ import cn.stackflow.aums.domain.repository.ResourceRepository;
 import cn.stackflow.aums.domain.repository.RoleRepository;
 import cn.stackflow.aums.domain.repository.UserRepository;
 import cn.stackflow.aums.domain.service.ResourceService;
+import org.checkerframework.checker.nullness.Opt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -145,6 +146,7 @@ public class ResourceServiceImpl implements ResourceService {
         Page<Resource> deptPage = resourceRepository.findAll(of);
         page.setTotal(deptPage.getTotalElements());
         page.setRows(deptPage.getContent().stream().map(item -> {
+
             ResourceDTO resourceDTO = new ResourceDTO();
             resourceDTO.setId(item.getId());
             resourceDTO.setName(item.getName());
@@ -154,6 +156,13 @@ public class ResourceServiceImpl implements ResourceService {
             resourceDTO.setEnable(item.getEnable());
             resourceDTO.setCode(item.getCode());
             resourceDTO.setIcon(item.getIcon());
+            if(StringUtils.isNotEmpty(item.getParentId())){
+                String parentId = item.getParentId();
+                Optional<Resource> resourceOptional = resourceRepository.findById(parentId);
+                if(resourceOptional.isPresent()){
+                    resourceDTO.setParentName(resourceOptional.get().getName());
+                }
+            }
             return resourceDTO;
         }).collect(Collectors.toList()));
         return page;

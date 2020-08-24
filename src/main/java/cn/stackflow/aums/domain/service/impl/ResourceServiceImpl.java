@@ -156,6 +156,7 @@ public class ResourceServiceImpl implements ResourceService {
             resourceDTO.setEnable(item.getEnable());
             resourceDTO.setCode(item.getCode());
             resourceDTO.setIcon(item.getIcon());
+            resourceDTO.setParentId(item.getParentId());
             if(StringUtils.isNotEmpty(item.getParentId())){
                 String parentId = item.getParentId();
                 Optional<Resource> resourceOptional = resourceRepository.findById(parentId);
@@ -171,25 +172,33 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public void create(User user, ResourceDTO resourceDTO) {
         Resource resource = new Resource();
-//        resource.setParentId();
-//        resource.setCode();
-//        resource.setName();
-//        resource.setRemark();
-//        resource.setType();
-//        resource.setUri();
-//        resource.setIcon();
-//        resource.setResourceLevel();
-//        resource.setSort();
-//        resource.setEnable();
-//        resource.setRoles();
-//        resource.setId();
-//
-//        resourceRepository.save(resource);
+        resource.setParentId(resourceDTO.getParentId());
+        resource.setCode(resourceDTO.getCode());
+        resource.setName(resourceDTO.getName());
+        resource.setRemark(resourceDTO.getRemark());
+        resource.setType(resourceDTO.getType());
+        resource.setUri(resourceDTO.getUri());
+        resource.setIcon(resourceDTO.getIcon());
+        resource.setResourceLevel(StringUtils.isEmpty(resourceDTO.getParentId())?1:2);
+        resource.setSort(0);
+        resource.setEnable(resourceDTO.getEnable());
+        resourceRepository.save(resource);
     }
 
     @Override
     public void update(User user, ResourceDTO resourceDTO) {
-
+        Resource resource = resourceRepository.getOne(resourceDTO.getId());
+        resource.setParentId(resourceDTO.getParentId());
+        resource.setCode(resourceDTO.getCode());
+        resource.setName(resourceDTO.getName());
+        resource.setRemark(resourceDTO.getRemark());
+        resource.setType(resourceDTO.getType());
+        resource.setUri(resourceDTO.getUri());
+        resource.setIcon(resourceDTO.getIcon());
+        resource.setResourceLevel(StringUtils.isEmpty(resourceDTO.getParentId())?1:2);
+        resource.setSort(0);
+        resource.setEnable(resourceDTO.getEnable());
+        resourceRepository.save(resource);
     }
 
     @Override

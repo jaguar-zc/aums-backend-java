@@ -16,14 +16,11 @@ import java.util.List;
 public class ResourceDTO {
 
     private String id;      //id
-    @JsonIgnore
     private String remark;  //资源描述
+    private String parentId;  //上级资源名称
     private String parentName;  //上级资源名称
-    @JsonIgnore
     private Resource.ResourceType type;//资源类型： 分组、模块、操作
-    @JsonIgnore
     private String uri;     //URI规则 多个用逗号分开
-    @JsonIgnore
     private Integer enable; //1启用;0停用
     private String code;    //权限CODE唯一代码
     private String name;    //资源名称

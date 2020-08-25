@@ -103,9 +103,6 @@ public class RoleServiceImpl implements RoleService {
         for (ResourceDTO resourceDTO : roleDTO.getResourceList()) {
             Resource r = resourceRepository.getOne(resourceDTO.getId());
             resources.add(r);
-            //子菜单全部包含
-            List<Resource> childrenResources = resourceRepository.findByEnableAndParentId(1, r.getId());
-            resources.addAll(childrenResources);
         }
         role.setResources(resources);
         roleRepository.save(role);

@@ -2,6 +2,7 @@ package cn.stackflow.aums.domain.service.impl;
 
 import cn.stackflow.aums.common.bean.PageResult;
 import cn.stackflow.aums.common.bean.ResourceDTO;
+import cn.stackflow.aums.common.bean.ResourceUiDTO;
 import cn.stackflow.aums.common.constant.Constants;
 import cn.stackflow.aums.common.utils.StringUtils;
 import cn.stackflow.aums.domain.entity.Resource;
@@ -53,18 +54,18 @@ public class ResourceServiceImpl implements ResourceService {
         }
 
         //找出1级菜单
-        List<ResourceDTO> resourceList =  resourceSet.stream()
-                .filter(item ->item.getResourceLevel() == Constants.FLAG_TRUE)
-                .sorted((s1,s2)->s1.getSort().compareTo(s2.getSort()))
+        List<ResourceDTO> resourceList = resourceSet.stream()
+                .filter(item -> item.getResourceLevel() == Constants.FLAG_TRUE)
+                .sorted((s1, s2) -> s1.getSort().compareTo(s2.getSort()))
                 .map(this::convertResource)
                 .collect(Collectors.toList());
 
         //找出2级菜单
-        resourceList.forEach(item ->{
-            if(item.getType() == Resource.ResourceType.GROUP){
+        resourceList.forEach(item -> {
+            if (item.getType() == Resource.ResourceType.GROUP) {
                 List<ResourceDTO> collect = resourceSet.stream()
                         .filter(i -> StringUtils.equals(item.getId(), i.getParentId()))
-                        .sorted((s1,s2)->s1.getSort().compareTo(s2.getSort()))
+                        .sorted((s1, s2) -> s1.getSort().compareTo(s2.getSort()))
                         .map(this::convertResource)
                         .collect(Collectors.toList());
                 item.setChildList(collect);
@@ -72,12 +73,12 @@ public class ResourceServiceImpl implements ResourceService {
         });
 
         //找出三级菜单
-        resourceList.forEach(item ->{
-            item.getChildList().forEach(childItem ->{
-                if(childItem.getType() == Resource.ResourceType.MODULE){
+        resourceList.forEach(item -> {
+            item.getChildList().forEach(childItem -> {
+                if (childItem.getType() == Resource.ResourceType.MODULE) {
                     List<ResourceDTO> collect = resourceSet.stream()
                             .filter(i -> StringUtils.equals(childItem.getId(), i.getParentId()))
-                            .sorted((s1,s2)->s1.getSort().compareTo(s2.getSort()))
+                            .sorted((s1, s2) -> s1.getSort().compareTo(s2.getSort()))
                             .map(this::convertResource)
                             .collect(Collectors.toList());
                     childItem.setChildList(collect);
@@ -91,55 +92,27 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public List<ResourceDTO> getAllResourceList() {
-        List<Resource> list = resourceRepository.findByEnableAndResourceLevelOrderBySortAsc(Constants.FLAG_TRUE,1);
+        List<Resource> list = resourceRepository.findByEnableAndResourceLevelOrderBySortAsc(Constants.FLAG_TRUE, 1);
         return list.stream().map(Resource::getId).map(this::getResource).collect(Collectors.toList());
     }
 
 
     @Override
-    public List<ResourceDTO> getResourceListByRoleId(String roleId) {
-        Set<Resource> resourceSet = new LinkedHashSet<Resource>();
+    public List<ResourceUiDTO> getResourceListByRoleId(String roleId) {
+        List<Resource> list = resourceRepository.findByEnableAndResourceLevelOrderBySortAsc(Constants.FLAG_TRUE, 1);
 
-        Role one = roleRepository.getOne(roleId);
-        resourceSet.addAll(one.getResources());
-
-        //找出1级菜单
-        List<ResourceDTO> resourceList =  resourceSet.stream()
-                .filter(item ->item.getResourceLevel() == Constants.FLAG_TRUE)
-                .sorted((s1,s2)->s1.getSort().compareTo(s2.getSort()))
-                .map(this::convertResource)
-                .collect(Collectors.toList());
-
-        //找出2级菜单
-        resourceList.forEach(item ->{
-            if(item.getType() == Resource.ResourceType.GROUP){
-                List<ResourceDTO> collect = resourceSet.stream()
-                        .filter(i -> StringUtils.equals(item.getId(), i.getParentId()))
-                        .sorted((s1,s2)->s1.getSort().compareTo(s2.getSort()))
-                        .map(this::convertResource)
-                        .collect(Collectors.toList());
-                item.setChildList(collect);
-            }
-        });
-
-        //找出三级菜单
-        resourceList.forEach(item ->{
-            item.getChildList().forEach(childItem ->{
-                if(childItem.getType() == Resource.ResourceType.MODULE){
-                    List<ResourceDTO> collect = resourceSet.stream()
-                            .filter(i -> StringUtils.equals(childItem.getId(), i.getParentId()))
-                            .sorted((s1,s2)->s1.getSort().compareTo(s2.getSort()))
-                            .map(this::convertResource)
-                            .collect(Collectors.toList());
-                    childItem.setChildList(collect);
-                }
-            });
-        });
-
-        return resourceList;
+        //判断是否用于菜单
+        List<String> ids = resourceRepository.findResourceIdsByRoleId(roleId);
+        //查询所有菜单
+        return list.stream().map(i -> {
+            ResourceUiDTO resourceUiDTO = new ResourceUiDTO(i.getId(), i.getName(), ids.contains(i.getId()));
+            List<ResourceUiDTO> collect = resourceRepository.findByEnableAndParentId(1, i.getId()).stream().map(j -> new ResourceUiDTO(j.getId(), j.getName(), ids.contains(i.getId()))).collect(Collectors.toList());
+            resourceUiDTO.setChildren(collect);
+            return resourceUiDTO;
+        }).collect(Collectors.toList());
     }
 
-    private ResourceDTO convertResource(Resource resource){
+    private ResourceDTO convertResource(Resource resource) {
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setId(resource.getId());
         resourceDTO.setCode(resource.getCode());
@@ -166,14 +139,14 @@ public class ResourceServiceImpl implements ResourceService {
         List<ResourceDTO> childResourceList = new ArrayList<ResourceDTO>();
 
         if (resource.getType() == Resource.ResourceType.GROUP) {
-            for (Resource moduleResource : resourceRepository.findByEnableAndParentId(Constants.FLAG_TRUE,resource.getId())) {
+            for (Resource moduleResource : resourceRepository.findByEnableAndParentId(Constants.FLAG_TRUE, resource.getId())) {
                 ResourceDTO moduleResourceDTO = getResource(moduleResource.getId());
                 childResourceList.add(moduleResourceDTO);
             }
         }
 
         if (resource.getType() == Resource.ResourceType.MODULE) {
-            for (Resource buttonResource : resourceRepository.findByEnableAndParentId(Constants.FLAG_TRUE,resource.getId())) {
+            for (Resource buttonResource : resourceRepository.findByEnableAndParentId(Constants.FLAG_TRUE, resource.getId())) {
                 ResourceDTO buttonResourceDTO = getResource(buttonResource.getId());
                 childResourceList.add(buttonResourceDTO);
             }
@@ -184,7 +157,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public PageResult<ResourceDTO> list(PageResult page) {
-        PageRequest of = PageRequest.of(page.getPage() - 1, page.getSize() );
+        PageRequest of = PageRequest.of(page.getPage() - 1, page.getSize());
         Page<Resource> deptPage = resourceRepository.findAll(of);
         page.setTotal(deptPage.getTotalElements());
         page.setRows(deptPage.getContent().stream().map(item -> {
@@ -199,10 +172,10 @@ public class ResourceServiceImpl implements ResourceService {
             resourceDTO.setCode(item.getCode());
             resourceDTO.setIcon(item.getIcon());
             resourceDTO.setParentId(item.getParentId());
-            if(StringUtils.isNotEmpty(item.getParentId())){
+            if (StringUtils.isNotEmpty(item.getParentId())) {
                 String parentId = item.getParentId();
                 Optional<Resource> resourceOptional = resourceRepository.findById(parentId);
-                if(resourceOptional.isPresent()){
+                if (resourceOptional.isPresent()) {
                     resourceDTO.setParentName(resourceOptional.get().getName());
                 }
             }
@@ -221,7 +194,7 @@ public class ResourceServiceImpl implements ResourceService {
         resource.setType(resourceDTO.getType());
         resource.setUri(resourceDTO.getUri());
         resource.setIcon(resourceDTO.getIcon());
-        resource.setResourceLevel(StringUtils.isEmpty(resourceDTO.getParentId())?1:2);
+        resource.setResourceLevel(StringUtils.isEmpty(resourceDTO.getParentId()) ? 1 : 2);
         resource.setSort(0);
         resource.setEnable(resourceDTO.getEnable());
         resourceRepository.save(resource);
@@ -237,7 +210,7 @@ public class ResourceServiceImpl implements ResourceService {
         resource.setType(resourceDTO.getType());
         resource.setUri(resourceDTO.getUri());
         resource.setIcon(resourceDTO.getIcon());
-        resource.setResourceLevel(StringUtils.isEmpty(resourceDTO.getParentId())?1:2);
+        resource.setResourceLevel(StringUtils.isEmpty(resourceDTO.getParentId()) ? 1 : 2);
         resource.setSort(0);
         resource.setEnable(resourceDTO.getEnable());
         resourceRepository.save(resource);

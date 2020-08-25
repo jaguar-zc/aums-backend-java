@@ -4,10 +4,7 @@ import cn.stackflow.aums.common.Result;
 import cn.stackflow.aums.common.ResultBuilder;
 import cn.stackflow.aums.common.UserContextHolder;
 import cn.stackflow.aums.common.aop.OperLog;
-import cn.stackflow.aums.common.bean.MenuType;
-import cn.stackflow.aums.common.bean.PageResult;
-import cn.stackflow.aums.common.bean.ResourceDTO;
-import cn.stackflow.aums.common.bean.ResourceMenuDTO;
+import cn.stackflow.aums.common.bean.*;
 import cn.stackflow.aums.common.constant.Constants;
 import cn.stackflow.aums.domain.entity.User;
 import cn.stackflow.aums.domain.service.ResourceService;
@@ -47,9 +44,9 @@ public class ResourceController {
 
     @ApiOperation("根据角色ID获取菜单列表")
     @GetMapping("/role/{roleId}")
-    public Result<List<ResourceMenuDTO>> getResourceListByRoleId(@PathVariable("roleId") String roleId){
+    public Result<List<ResourceUiDTO>> getResourceListByRoleId(@PathVariable("roleId") String roleId){
         User user = UserContextHolder.currentUser();
-        return ResultBuilder.success(ResourceMenuDTO.convert(resourceService.getResourceListByRoleId(roleId)));
+        return ResultBuilder.success(resourceService.getResourceListByRoleId(roleId));
     }
 
 

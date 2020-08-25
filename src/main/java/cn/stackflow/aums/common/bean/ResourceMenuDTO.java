@@ -18,6 +18,7 @@ public class ResourceMenuDTO {
     private String id;      //id
     private String key;    //权限CODE唯一代码
     private String title;    //资源名称
+    private Integer checked;    //是否拥有
     private String icon;    //图标
     private List<ResourceMenuDTO> children;//子列表
 

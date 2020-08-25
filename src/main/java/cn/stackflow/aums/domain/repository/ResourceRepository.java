@@ -3,6 +3,8 @@ package cn.stackflow.aums.domain.repository;
 import cn.stackflow.aums.domain.entity.Resource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,4 +19,7 @@ public interface ResourceRepository extends JpaRepository<Resource, String>, Jpa
     List<Resource> findByEnableAndParentId(Integer enable, String parentId);
 
     List<Resource> findByEnableAndResourceLevelOrderBySortAsc(Integer enable, int level);
+
+    @Query(value = "select resource_id from t_sys_role_resource where role_id =:roleId",nativeQuery = true)
+    List<String> findResourceIdsByRoleId(@Param("roleId") String roleId);
 }

@@ -2,6 +2,7 @@ package cn.stackflow.aums.domain.service;
 
 import cn.stackflow.aums.common.bean.PageResult;
 import cn.stackflow.aums.common.bean.ResourceDTO;
+import cn.stackflow.aums.common.bean.ResourceUiDTO;
 import cn.stackflow.aums.domain.entity.User;
 
 import java.util.List;
@@ -26,5 +27,5 @@ public interface ResourceService {
 
     void delete(User user, String id);
 
-    List<ResourceDTO> getResourceListByRoleId(String roleId);
+    List<ResourceUiDTO> getResourceListByRoleId(String roleId);
 }

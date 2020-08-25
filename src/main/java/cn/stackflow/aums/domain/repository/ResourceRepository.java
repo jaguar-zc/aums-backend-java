@@ -16,7 +16,7 @@ import java.util.List;
 @Repository
 public interface ResourceRepository extends JpaRepository<Resource, String>, JpaSpecificationExecutor<Resource> {
 
-    List<Resource> findByEnableAndParentId(Integer enable, String parentId);
+    List<Resource> findByEnableAndParentIdOrderBySortAsc(Integer enable, String parentId);
 
     List<Resource> findByEnableAndResourceLevelOrderBySortAsc(Integer enable, int level);
 

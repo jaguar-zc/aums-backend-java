@@ -49,12 +49,12 @@ public class ResourceController {
         return ResultBuilder.success(resourceService.getResourceListByRoleId(roleId));
     }
 
-
-
     @ApiOperation("资源列表")
     @GetMapping
-    public Result<PageResult<ResourceDTO>> list(PageResult page) {
-        return ResultBuilder.success(resourceService.list(page));
+    public Result<PageResult<ResourceDTO>> list(PageResult page,
+                                                @RequestParam(value = "parentId",required = false) String parentId,
+                                                @RequestParam(value = "name",required = false) String name) {
+        return ResultBuilder.success(resourceService.list(page,parentId,name));
     }
 
     @OperLog(operModul = "资源",operType = Constants.OPER_TYPE_ADD,operDesc = "创建资源")

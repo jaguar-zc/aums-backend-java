@@ -12,13 +12,17 @@ import cn.stackflow.aums.domain.repository.ResourceRepository;
 import cn.stackflow.aums.domain.repository.RoleRepository;
 import cn.stackflow.aums.domain.repository.UserRepository;
 import cn.stackflow.aums.domain.service.ResourceService;
-import org.checkerframework.checker.nullness.Opt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -106,7 +110,7 @@ public class ResourceServiceImpl implements ResourceService {
         //查询所有菜单
         return list.stream().map(i -> {
             ResourceUiDTO resourceUiDTO = new ResourceUiDTO(i.getId(), i.getName(), ids.contains(i.getId()));
-            List<ResourceUiDTO> collect = resourceRepository.findByEnableAndParentId(1, i.getId()).stream().map(j -> new ResourceUiDTO(j.getId(), j.getName(), ids.contains(i.getId()))).collect(Collectors.toList());
+            List<ResourceUiDTO> collect = resourceRepository.findByEnableAndParentIdOrderBySortAsc(1, i.getId()).stream().map(j -> new ResourceUiDTO(j.getId(), j.getName(), ids.contains(i.getId()))).collect(Collectors.toList());
             resourceUiDTO.setChildren(collect);
             return resourceUiDTO;
         }).collect(Collectors.toList());
@@ -139,14 +143,14 @@ public class ResourceServiceImpl implements ResourceService {
         List<ResourceDTO> childResourceList = new ArrayList<ResourceDTO>();
 
         if (resource.getType() == Resource.ResourceType.GROUP) {
-            for (Resource moduleResource : resourceRepository.findByEnableAndParentId(Constants.FLAG_TRUE, resource.getId())) {
+            for (Resource moduleResource : resourceRepository.findByEnableAndParentIdOrderBySortAsc(Constants.FLAG_TRUE, resource.getId())) {
                 ResourceDTO moduleResourceDTO = getResource(moduleResource.getId());
                 childResourceList.add(moduleResourceDTO);
             }
         }
 
         if (resource.getType() == Resource.ResourceType.MODULE) {
-            for (Resource buttonResource : resourceRepository.findByEnableAndParentId(Constants.FLAG_TRUE, resource.getId())) {
+            for (Resource buttonResource : resourceRepository.findByEnableAndParentIdOrderBySortAsc(Constants.FLAG_TRUE, resource.getId())) {
                 ResourceDTO buttonResourceDTO = getResource(buttonResource.getId());
                 childResourceList.add(buttonResourceDTO);
             }
@@ -156,25 +160,40 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public PageResult<ResourceDTO> list(PageResult page) {
-        PageRequest of = PageRequest.of(page.getPage() - 1, page.getSize());
-        Page<Resource> deptPage = resourceRepository.findAll(of);
+    public PageResult<ResourceDTO> list(PageResult page, String parentId, String name) {
+        PageRequest of = PageRequest.of(page.getPage() - 1, page.getSize(), Sort.by(Sort.Direction.ASC,"sort"));
+
+        Specification<Resource> specification = new Specification<Resource>() {
+            @Override
+            public javax.persistence.criteria.Predicate toPredicate(Root<Resource> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                if (StringUtils.isNotEmpty(parentId)) {
+                    predicates.add(criteriaBuilder.equal(root.get("parentId"), parentId));
+                }
+                if (StringUtils.isNotEmpty(name)) {
+                    predicates.add(criteriaBuilder.like(root.get("name"), "%"+name+"%"));
+                }
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
+        Page<Resource> deptPage = resourceRepository.findAll(specification,of);
         page.setTotal(deptPage.getTotalElements());
         page.setRows(deptPage.getContent().stream().map(item -> {
-
             ResourceDTO resourceDTO = new ResourceDTO();
             resourceDTO.setId(item.getId());
             resourceDTO.setName(item.getName());
             resourceDTO.setRemark(item.getRemark());
             resourceDTO.setType(item.getType());
+            resourceDTO.setSort(item.getSort());
             resourceDTO.setUri(item.getUri());
             resourceDTO.setEnable(item.getEnable());
             resourceDTO.setCode(item.getCode());
             resourceDTO.setIcon(item.getIcon());
             resourceDTO.setParentId(item.getParentId());
             if (StringUtils.isNotEmpty(item.getParentId())) {
-                String parentId = item.getParentId();
-                Optional<Resource> resourceOptional = resourceRepository.findById(parentId);
+                String pid = item.getParentId();
+                Optional<Resource> resourceOptional = resourceRepository.findById(pid);
                 if (resourceOptional.isPresent()) {
                     resourceDTO.setParentName(resourceOptional.get().getName());
                 }

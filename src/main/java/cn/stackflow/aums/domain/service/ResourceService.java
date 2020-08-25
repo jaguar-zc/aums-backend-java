@@ -19,7 +19,7 @@ public interface ResourceService {
 
     ResourceDTO getResource(String id);
 
-    PageResult<ResourceDTO> list(PageResult page);
+    PageResult<ResourceDTO> list(PageResult page, String parentId, String name);
 
     void create(User user, ResourceDTO resourceDTO);
 

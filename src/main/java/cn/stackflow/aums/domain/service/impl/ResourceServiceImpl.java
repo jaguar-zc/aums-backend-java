@@ -96,6 +96,48 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
 
+    @Override
+    public List<ResourceDTO> getResourceListByRoleId(String roleId) {
+        Set<Resource> resourceSet = new LinkedHashSet<Resource>();
+
+        Role one = roleRepository.getOne(roleId);
+        resourceSet.addAll(one.getResources());
+
+        //找出1级菜单
+        List<ResourceDTO> resourceList =  resourceSet.stream()
+                .filter(item ->item.getResourceLevel() == Constants.FLAG_TRUE)
+                .sorted((s1,s2)->s1.getSort().compareTo(s2.getSort()))
+                .map(this::convertResource)
+                .collect(Collectors.toList());
+
+        //找出2级菜单
+        resourceList.forEach(item ->{
+            if(item.getType() == Resource.ResourceType.GROUP){
+                List<ResourceDTO> collect = resourceSet.stream()
+                        .filter(i -> StringUtils.equals(item.getId(), i.getParentId()))
+                        .sorted((s1,s2)->s1.getSort().compareTo(s2.getSort()))
+                        .map(this::convertResource)
+                        .collect(Collectors.toList());
+                item.setChildList(collect);
+            }
+        });
+
+        //找出三级菜单
+        resourceList.forEach(item ->{
+            item.getChildList().forEach(childItem ->{
+                if(childItem.getType() == Resource.ResourceType.MODULE){
+                    List<ResourceDTO> collect = resourceSet.stream()
+                            .filter(i -> StringUtils.equals(childItem.getId(), i.getParentId()))
+                            .sorted((s1,s2)->s1.getSort().compareTo(s2.getSort()))
+                            .map(this::convertResource)
+                            .collect(Collectors.toList());
+                    childItem.setChildList(collect);
+                }
+            });
+        });
+
+        return resourceList;
+    }
 
     private ResourceDTO convertResource(Resource resource){
         ResourceDTO resourceDTO = new ResourceDTO();

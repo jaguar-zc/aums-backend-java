@@ -26,4 +26,5 @@ public interface ResourceService {
 
     void delete(User user, String id);
 
+    List<ResourceDTO> getResourceListByRoleId(String roleId);
 }

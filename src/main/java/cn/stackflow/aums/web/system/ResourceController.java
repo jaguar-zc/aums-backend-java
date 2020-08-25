@@ -43,6 +43,14 @@ public class ResourceController {
         return ResultBuilder.fail("不支持的类型");
     }
 
+    @ApiOperation("根据角色ID获取菜单列表")
+    @GetMapping("/role/{roleId}")
+    public Result<List<ResourceMenuDTO>> getResourceListByRoleId(@PathVariable("roleId") String roleId){
+        User user = UserContextHolder.currentUser();
+        return ResultBuilder.success(ResourceMenuDTO.convert(resourceService.getResourceListByRoleId(roleId)));
+    }
+
+
 
     @ApiOperation("资源列表")
     @GetMapping

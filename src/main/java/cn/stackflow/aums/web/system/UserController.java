@@ -3,7 +3,9 @@ package cn.stackflow.aums.web.system;
 import cn.stackflow.aums.common.Result;
 import cn.stackflow.aums.common.ResultBuilder;
 import cn.stackflow.aums.common.UserContextHolder;
+import cn.stackflow.aums.common.aop.OperLog;
 import cn.stackflow.aums.common.bean.*;
+import cn.stackflow.aums.common.constant.Constants;
 import cn.stackflow.aums.domain.service.UserService;
 import cn.stackflow.aums.web.ApiVersion;
 import io.swagger.annotations.Api;
@@ -48,7 +50,7 @@ public class UserController {
         return ResultBuilder.success(user);
     }
 
-
+    @OperLog(operModul = "用户",operType = Constants.OPER_TYPE_ADD,operDesc = "添加用户")
     @ApiOperation("添加用户")
     @PostMapping
     public Result<String> add(@RequestBody @Valid UserDTO userDTO) {
@@ -56,7 +58,7 @@ public class UserController {
         return ResultBuilder.success();
     }
 
-
+    @OperLog(operModul = "用户",operType = Constants.OPER_TYPE_UPDATE,operDesc = "修改手机号")
     @ApiOperation("修改手机号")
     @PutMapping("/updatePhone")
     public Result<String> updatePhone(@RequestBody @Valid UpdatePhoneDTO updatePhoneDTO) {
@@ -64,7 +66,7 @@ public class UserController {
         return ResultBuilder.success();
     }
 
-
+    @OperLog(operModul = "用户",operType = Constants.OPER_TYPE_UPDATE,operDesc = "修改密码")
     @ApiOperation("修改密码")
     @PutMapping("/updatePwd")
     public Result<String> updatePwd(@RequestBody @Valid UpdatePwdDTO updatePwdDTO) {
@@ -72,6 +74,7 @@ public class UserController {
         return ResultBuilder.success();
     }
 
+    @OperLog(operModul = "用户",operType = Constants.OPER_TYPE_UPDATE,operDesc = "注销用户")
     @ApiOperation("注销用户")
     @PostMapping("/close")
     public Result<String> close(@RequestBody UserCloseDTO userCloseDTO) {

@@ -1,8 +1,10 @@
 package cn.stackflow.aums.web;
 
 import cn.stackflow.aums.common.Result;
+import cn.stackflow.aums.common.aop.OperLog;
 import cn.stackflow.aums.common.bean.LoginReq;
 import cn.stackflow.aums.common.bean.LoginResp;
+import cn.stackflow.aums.common.constant.Constants;
 import cn.stackflow.aums.common.shiro.JwtUtil;
 import cn.stackflow.aums.common.shiro.UsernamePasswordJWTToken;
 import cn.stackflow.aums.domain.entity.User;
@@ -37,6 +39,7 @@ public class LoginController {
     @Value("${spring.token-expire:86400}")
     Long tokenExpire;
 
+    @OperLog(operModul = "用户",operType = Constants.OPER_TYPE_LOGIN,operDesc = Constants.OPER_TYPE_LOGIN)
     @ApiOperation("用户登录")
     @PostMapping("/login")
     public Result<LoginResp> login(@RequestBody @Valid LoginReq loginReq) {
@@ -74,6 +77,7 @@ public class LoginController {
         return jwtToken;
     }
 
+    @OperLog(operModul = "用户",operType = Constants.OPER_TYPE_LOGINOUT,operDesc = Constants.OPER_TYPE_LOGINOUT)
     @ApiOperation("退出登录")
     @GetMapping("/logout")
     public Result<String> logout() {

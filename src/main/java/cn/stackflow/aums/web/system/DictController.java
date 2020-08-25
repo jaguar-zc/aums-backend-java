@@ -3,10 +3,12 @@ package cn.stackflow.aums.web.system;
 import cn.stackflow.aums.common.Result;
 import cn.stackflow.aums.common.ResultBuilder;
 import cn.stackflow.aums.common.UserContextHolder;
+import cn.stackflow.aums.common.aop.OperLog;
 import cn.stackflow.aums.common.bean.DeptDTO;
 import cn.stackflow.aums.common.bean.DeptMemberDTO;
 import cn.stackflow.aums.common.bean.DictDTO;
 import cn.stackflow.aums.common.bean.PageResult;
+import cn.stackflow.aums.common.constant.Constants;
 import cn.stackflow.aums.domain.entity.User;
 import cn.stackflow.aums.domain.service.DictService;
 import cn.stackflow.aums.web.ApiVersion;
@@ -39,6 +41,7 @@ public class DictController {
     }
 
 
+    @OperLog(operModul = "字典",operType = Constants.OPER_TYPE_ADD,operDesc = "创建字典")
     @ApiOperation("创建字典")
     @PostMapping
     public Result<String> create(@RequestBody @Valid DictDTO deptDTO) {
@@ -47,7 +50,7 @@ public class DictController {
         return ResultBuilder.success();
     }
 
-
+    @OperLog(operModul = "字典",operType = Constants.OPER_TYPE_UPDATE,operDesc = "修改字典")
     @ApiOperation("修改字典")
     @PutMapping
     public Result<String> update(@RequestBody @Valid DictDTO deptDTO) {
@@ -56,6 +59,7 @@ public class DictController {
         return ResultBuilder.success();
     }
 
+    @OperLog(operModul = "字典",operType = Constants.OPER_TYPE_DELETE,operDesc = "删除字典")
     @ApiOperation("删除字典")
     @DeleteMapping("/{code}")
     public Result<String> delete(@PathVariable("code") String code){

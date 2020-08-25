@@ -1,5 +1,7 @@
 package cn.stackflow.aums.web.system;
 
+import cn.stackflow.aums.common.aop.OperLog;
+import cn.stackflow.aums.common.constant.Constants;
 import cn.stackflow.aums.domain.service.RoleService;
 import cn.stackflow.aums.common.Result;
 import cn.stackflow.aums.common.ResultBuilder;
@@ -33,6 +35,8 @@ public class RoleController {
         return ResultBuilder.success(roleService.list(page));
     }
 
+
+    @OperLog(operModul = "角色",operType = Constants.OPER_TYPE_ADD,operDesc = "添加角色")
     @ApiOperation("添加角色")
     @PostMapping
     public Result<String> add(@RequestBody @Valid RoleDTO roleDTO){
@@ -41,7 +45,7 @@ public class RoleController {
         return ResultBuilder.success();
     }
 
-
+    @OperLog(operModul = "角色",operType = Constants.OPER_TYPE_UPDATE,operDesc = "修改角色")
     @ApiOperation("修改角色")
     @PutMapping
     public Result<String> update(@RequestBody @Valid RoleDTO roleDTO){
@@ -50,7 +54,7 @@ public class RoleController {
         return ResultBuilder.success();
     }
 
-
+    @OperLog(operModul = "角色",operType = Constants.OPER_TYPE_DELETE,operDesc = "删除角色")
     @ApiOperation("删除角色")
     @DeleteMapping("/{id}")
     public Result<String> delete(@PathVariable("id") String id){

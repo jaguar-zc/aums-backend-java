@@ -3,10 +3,12 @@ package cn.stackflow.aums.web.system;
 import cn.stackflow.aums.common.Result;
 import cn.stackflow.aums.common.ResultBuilder;
 import cn.stackflow.aums.common.UserContextHolder;
+import cn.stackflow.aums.common.aop.OperLog;
 import cn.stackflow.aums.common.bean.MenuType;
 import cn.stackflow.aums.common.bean.PageResult;
 import cn.stackflow.aums.common.bean.ResourceDTO;
 import cn.stackflow.aums.common.bean.ResourceMenuDTO;
+import cn.stackflow.aums.common.constant.Constants;
 import cn.stackflow.aums.domain.entity.User;
 import cn.stackflow.aums.domain.service.ResourceService;
 import cn.stackflow.aums.web.ApiVersion;
@@ -58,6 +60,7 @@ public class ResourceController {
         return ResultBuilder.success(resourceService.list(page));
     }
 
+    @OperLog(operModul = "资源",operType = Constants.OPER_TYPE_ADD,operDesc = "创建资源")
     @ApiOperation("创建资源")
     @PostMapping
     public Result<String> create(@RequestBody @Valid ResourceDTO resourceDTO) {
@@ -66,7 +69,7 @@ public class ResourceController {
         return ResultBuilder.success();
     }
 
-
+    @OperLog(operModul = "资源",operType = Constants.OPER_TYPE_UPDATE,operDesc = "修改资源")
     @ApiOperation("修改资源")
     @PutMapping
     public Result<String> update(@RequestBody @Valid ResourceDTO resourceDTO) {
@@ -75,6 +78,7 @@ public class ResourceController {
         return ResultBuilder.success();
     }
 
+    @OperLog(operModul = "资源",operType = Constants.OPER_TYPE_DELETE,operDesc = "删除资源")
     @ApiOperation("删除资源")
     @DeleteMapping("/{id}")
     public Result<String> delete(@PathVariable("id") String id){

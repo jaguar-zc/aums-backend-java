@@ -61,7 +61,7 @@ public class UserController {
 
     @OperLog(operModul = "用户",operType = Constants.OPER_TYPE_UPDATE,operDesc = "修改用户")
     @ApiOperation("修改用户")
-    @PostMapping
+    @PutMapping
     public Result<String> update(@RequestBody @Valid UserDTO userDTO) {
         userService.update(userDTO);
         return ResultBuilder.success();

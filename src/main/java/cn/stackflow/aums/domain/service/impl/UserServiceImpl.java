@@ -208,20 +208,27 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-
     private void checkUserEnable(User user){
         Assert.isTrue(user.getEnable() == 1,"该用户已停用");
     }
 
     @Override
-    public void close(String userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (!userOptional.isPresent()) {
-            throw new ServiceException("用户不存在");
-        }
-        User user = userOptional.get();
-        log.info("close:{}", user.getUsername());
-        user.setEnable(0);
+    public void update(UserDTO userDTO) {
+        User user = userRepository.getOne(userDTO.getId());
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(userDTO.getPassword());
+        user.setName(userDTO.getName());
+        user.setPhone(userDTO.getPhone());
+        Dept dept = new Dept();
+        dept.setId(userDTO.getDeptId());
+        user.setDept(dept);
+        user.setRoles(String.join(User.USER_ROLE_SEGMENT, userDTO.getRoleList()));
+        user.setEnable(userDTO.getEnable());
         userRepository.save(user);
+    }
+
+    @Override
+    public void delete(User user, String id) {
+        userRepository.deleteById(id);
     }
 }

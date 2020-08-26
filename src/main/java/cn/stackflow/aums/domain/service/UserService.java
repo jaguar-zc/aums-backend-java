@@ -25,5 +25,7 @@ public interface UserService {
 
     void updatePhone(UpdatePhoneDTO updatePhoneDTO);
 
-    void close(String userId);
+    void update(UserDTO userDTO);
+
+    void delete(User user, String id);
 }

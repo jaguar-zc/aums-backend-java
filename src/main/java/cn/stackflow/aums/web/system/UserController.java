@@ -6,6 +6,7 @@ import cn.stackflow.aums.common.UserContextHolder;
 import cn.stackflow.aums.common.aop.OperLog;
 import cn.stackflow.aums.common.bean.*;
 import cn.stackflow.aums.common.constant.Constants;
+import cn.stackflow.aums.domain.entity.User;
 import cn.stackflow.aums.domain.service.UserService;
 import cn.stackflow.aums.web.ApiVersion;
 import io.swagger.annotations.Api;
@@ -58,6 +59,14 @@ public class UserController {
         return ResultBuilder.success();
     }
 
+    @OperLog(operModul = "用户",operType = Constants.OPER_TYPE_UPDATE,operDesc = "修改用户")
+    @ApiOperation("修改用户")
+    @PostMapping
+    public Result<String> update(@RequestBody @Valid UserDTO userDTO) {
+        userService.update(userDTO);
+        return ResultBuilder.success();
+    }
+
     @OperLog(operModul = "用户",operType = Constants.OPER_TYPE_UPDATE,operDesc = "修改手机号")
     @ApiOperation("修改手机号")
     @PutMapping("/updatePhone")
@@ -74,12 +83,12 @@ public class UserController {
         return ResultBuilder.success();
     }
 
-    @OperLog(operModul = "用户",operType = Constants.OPER_TYPE_UPDATE,operDesc = "注销用户")
-    @ApiOperation("注销用户")
-    @PostMapping("/close")
-    public Result<String> close(@RequestBody UserCloseDTO userCloseDTO) {
-        userService.close(userCloseDTO.getUserId());
-//        userService.updatePwd(updatePwdDTO);
+    @OperLog(operModul = "用户",operType = Constants.OPER_TYPE_DELETE,operDesc = "删除用户")
+    @ApiOperation("删除用户")
+    @DeleteMapping("/{id}")
+    public Result<String> delete(@PathVariable("id") String id){
+        User user = UserContextHolder.currentUser();
+        userService.delete(user,id);
         return ResultBuilder.success();
     }
 

@@ -230,7 +230,7 @@ public class ResourceServiceImpl implements ResourceService {
         resource.setUri(resourceDTO.getUri());
         resource.setIcon(resourceDTO.getIcon());
         resource.setResourceLevel(StringUtils.isEmpty(resourceDTO.getParentId()) ? 1 : 2);
-        resource.setSort(0);
+        resource.setSort(resourceDTO.getSort());
         resource.setEnable(resourceDTO.getEnable());
         resourceRepository.save(resource);
     }

@@ -181,10 +181,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updatePwd(UpdatePwdDTO updatePwdDTO) {
-        log.info("updatePwd:{},{},{}", updatePwdDTO.getUserId(), updatePwdDTO.getOldPassword(), updatePwdDTO.getNewPassword());
+        log.info("updatePwd:{},{},{}", updatePwdDTO.getUserId(), updatePwdDTO.getNewPassword());
 
         Assert.hasText(updatePwdDTO.getUserId(), "缺少参数[userId]");
-        Assert.hasText(updatePwdDTO.getOldPassword(), "请输入旧密码");
+//        Assert.hasText(updatePwdDTO.getOldPassword(), "请输入旧密码");
         Assert.hasText(updatePwdDTO.getNewPassword(), "请输入新密码");
 
         Optional<User> userOptional = userRepository.findById(updatePwdDTO.getUserId());
@@ -194,12 +194,10 @@ public class UserServiceImpl implements UserService {
 
         User user = userOptional.get();
         this.checkUserEnable(user);
-
-
-        String encodeOldPassword = passwordEncoder.encode(user.getSalt(), updatePwdDTO.getOldPassword());
-        if (!StringUtils.equals(encodeOldPassword, user.getPassword())) {
-            throw new ServiceException("旧密码错误");
-        }
+//        String encodeOldPassword = passwordEncoder.encode(user.getSalt(), updatePwdDTO.getOldPassword());
+//        if (!StringUtils.equals(encodeOldPassword, user.getPassword())) {
+//            throw new ServiceException("旧密码错误");
+//        }
         String encodeNewPassword = passwordEncoder.encode(user.getSalt(), updatePwdDTO.getNewPassword());
 
         log.info("user:{},updatePwd:{} ,to: {}", user.getUsername(), user.getPassword(), encodeNewPassword);
@@ -216,7 +214,6 @@ public class UserServiceImpl implements UserService {
     public void update(UserDTO userDTO) {
         User user = userRepository.getOne(userDTO.getId());
         user.setUsername(userDTO.getUsername());
-        user.setPassword(userDTO.getPassword());
         user.setName(userDTO.getName());
         user.setPhone(userDTO.getPhone());
         Dept dept = new Dept();

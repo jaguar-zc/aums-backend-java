@@ -15,8 +15,6 @@ public class UpdatePwdDTO {
     @NotEmpty
     private String userId;
     @NotEmpty
-    private String oldPassword;
-    @NotEmpty
     private String newPassword;
 
 }

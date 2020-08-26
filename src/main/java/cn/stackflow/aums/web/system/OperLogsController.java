@@ -36,8 +36,9 @@ public class OperLogsController {
     @ApiOperation("日志列表")
     @GetMapping
     public Result<PageResult<OperLogs>> list(PageResult page,
-                                             @RequestParam(value = "logsType",required = false) Integer logsType) {
-        return ResultBuilder.success(operLogsService.findList(page,logsType));
+                                             @RequestParam(value = "logsType",required = false) Integer logsType,
+                                             @RequestParam(value = "url",required = false) String url) {
+        return ResultBuilder.success(operLogsService.findList(page,logsType,url));
     }
 
 }

@@ -8,6 +8,6 @@ import cn.stackflow.aums.domain.entity.OperLogs;
  * @create: 2020-06-28 16:55
  */
 public interface OperLogsService {
-     PageResult<OperLogs> findList(PageResult pageResult, Integer logsType);
+     PageResult<OperLogs> findList(PageResult pageResult, Integer logsType, String url);
      void insert(OperLogs operLogs);
 }

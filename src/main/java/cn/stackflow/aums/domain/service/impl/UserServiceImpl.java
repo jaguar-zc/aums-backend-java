@@ -95,7 +95,6 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("用户不存在");
         }
         User user = userOptional.get();
-
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setUsername(user.getUsername());
@@ -106,21 +105,12 @@ public class UserServiceImpl implements UserService {
         userDTO.setDeptId(user.getDept().getId());
         userDTO.setDeptName(user.getDept().getName());
         List<Role> roleList = roleRepository.findByIdIn(user.getRoleIds());
-        userDTO.setRoleList(roleList.stream().map(item -> {
-            RoleDTO roleDTO = new RoleDTO();
-            roleDTO.setId(item.getId());
-            roleDTO.setCode(item.getCode());
-            roleDTO.setName(item.getName());
-            return roleDTO;
-        }).collect(Collectors.toList()));
-
+        userDTO.setRoleList(roleList.stream().map(item ->  item.getId()).collect(Collectors.toList()));
         Dept dept = user.getDept();
         if (dept != null) {
             userDTO.setDeptId(dept.getId());
             userDTO.setDeptName(dept.getName());
         }
-
-
         return userDTO;
     }
 
@@ -135,7 +125,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO create(UserDTO userDTO) {
         log.info("createUser:{}", userDTO.getUsername());
-
         Assert.hasText(userDTO.getUsername(), "缺少参数[username]");
         Assert.hasText(userDTO.getName(), "缺少参数[name]");
         Assert.hasText(userDTO.getPassword(), "缺少参数[password]");
@@ -152,7 +141,7 @@ public class UserServiceImpl implements UserService {
         user.setName(userDTO.getName());
         user.setPhone(userDTO.getPhone());
         user.setDept(deptRepository.getOne(userDTO.getDeptId()));
-        List<String> roleIds = userDTO.getRoleList().stream().map(item -> item.getId() + "").collect(Collectors.toList());
+        List<String> roleIds = userDTO.getRoleList();
         user.setRoles(String.join(User.USER_ROLE_SEGMENT, roleIds));
         user.setSalt(UUID.randomUUID().toString().substring(0, 8));
         String encodePassword = passwordEncoder.encode(user.getSalt(), user.getPassword());

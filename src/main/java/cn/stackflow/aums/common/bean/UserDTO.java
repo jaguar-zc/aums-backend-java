@@ -31,5 +31,5 @@ public class UserDTO {
     private String deptName;//部门
     private Integer enable;// 0:禁用 1:启用
     @NotEmpty
-    private List<RoleDTO> roleList;//角色
+    private List<String> roleList;//角色
 }

@@ -10,7 +10,7 @@ import cn.stackflow.aums.domain.entity.User;
  */
 public interface DictService {
 
-    PageResult<DictDTO> list(PageResult page);
+    PageResult<DictDTO> list(PageResult page, String name);
 
     DictDTO get(String code);
 

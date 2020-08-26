@@ -5,7 +5,6 @@ import cn.stackflow.aums.common.utils.StringUtils;
 import cn.stackflow.aums.domain.entity.OperLogs;
 import cn.stackflow.aums.domain.repository.OperLogsRepository;
 import cn.stackflow.aums.domain.service.OperLogsService;
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,7 +31,7 @@ public class OperLogsServiceImpl implements OperLogsService {
 
 
     @Override
-    public PageResult<OperLogs> findList(PageResult page, Integer logsType) {
+    public PageResult<OperLogs> findList(PageResult page, Integer logsType, String url) {
         PageRequest of = PageRequest.of(page.getPage() - 1, page.getSize(), Sort.by(Sort.Direction.DESC, "createTime"));
         Specification<OperLogs> specification = new Specification<OperLogs>() {
             @Override
@@ -40,6 +39,9 @@ public class OperLogsServiceImpl implements OperLogsService {
                 List<Predicate> predicates = new ArrayList<>();
                 if (logsType != null) {
                     predicates.add(criteriaBuilder.equal(root.get("logsType"), logsType));
+                }
+                if (StringUtils.isNotEmpty(url)) {
+                    predicates.add(criteriaBuilder.equal(root.get("operUri"), url));
                 }
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }

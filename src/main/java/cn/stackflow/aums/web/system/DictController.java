@@ -36,8 +36,8 @@ public class DictController {
 
     @ApiOperation("字典列表")
     @GetMapping
-    public Result<PageResult<DictDTO>> list(PageResult page) {
-        return ResultBuilder.success(dictService.list(page));
+    public Result<PageResult<DictDTO>> list(PageResult page,@RequestParam(value = "name",required = false) String name) {
+        return ResultBuilder.success(dictService.list(page,name));
     }
 
 

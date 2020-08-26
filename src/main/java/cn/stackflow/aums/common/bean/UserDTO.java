@@ -19,7 +19,7 @@ public class UserDTO {
     @NotEmpty
     @Pattern(regexp = "^[A-Za-z0-9_-]{6,20}$", message = "账号仅允许数字字母下划线6-20位")
     private String username;//账号
-    @NotEmpty
+//    @NotEmpty
     private String password;//密码
     @NotEmpty
     private String name;//姓名

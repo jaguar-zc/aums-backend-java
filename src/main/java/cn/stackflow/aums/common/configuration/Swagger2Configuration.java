@@ -48,8 +48,8 @@ public class Swagger2Configuration {
 
     private ApiInfo apiWebInfo() {
         return new ApiInfoBuilder()
-                .title("统一权限系统")
-                .description("统一权限系统接口文档")
+                .title("Nix Systems")
+                .description("Nix Systems Api Doc")
                 .version("1.0")
                 .build();
     }

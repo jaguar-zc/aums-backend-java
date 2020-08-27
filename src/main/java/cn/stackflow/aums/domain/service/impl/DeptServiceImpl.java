@@ -45,6 +45,7 @@ public class DeptServiceImpl implements DeptService {
         page.setRows(deptPage.getContent().stream().map(item -> {
             DeptDTO deptDTO = new DeptDTO();
             deptDTO.setRemark(item.getRemark());
+            deptDTO.setAppId(item.getAppId());
             deptDTO.setCreateTime(item.getCreateTime());
             deptDTO.setCreateUser(item.getCreateUser());
             deptDTO.setId(item.getId());
@@ -60,6 +61,7 @@ public class DeptServiceImpl implements DeptService {
         Dept dept = new Dept();
         dept.setName(deptDTO.getName());
         dept.setRemark(deptDTO.getRemark());
+        dept.setAppId(deptDTO.getAppId());
         dept.setCreateTime(LocalDateTime.now());
         dept.setCreateUser(user.getUsername());
         deptRepository.saveAndFlush(dept);
@@ -71,13 +73,9 @@ public class DeptServiceImpl implements DeptService {
         Assert.isTrue(deptOptional.isPresent(), "部门ID[" + deptDTO.getId() + "]不存在");
         Dept dept = deptOptional.get();
         dept.setName(deptDTO.getName());
+        dept.setAppId(deptDTO.getAppId());
         dept.setRemark(deptDTO.getRemark());
         deptRepository.saveAndFlush(dept);
-    }
-
-    @Override
-    public void remove(User user, String id) {
-        deptRepository.deleteById(id);
     }
 
     @Override

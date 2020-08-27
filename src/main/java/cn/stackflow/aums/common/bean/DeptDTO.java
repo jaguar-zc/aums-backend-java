@@ -18,6 +18,7 @@ public class DeptDTO {
     private String id;
     @NotEmpty
     private String name;//账号
+    private String appId;//应用ID
     private String remark;//部门描述
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;//创建时间

@@ -16,6 +16,7 @@ import java.util.List;
 public class ResourceDTO {
 
     private String id;      //id
+    private String appId;//应用ID
     private String remark;  //资源描述
     private String parentId;  //上级资源名称
     private String parentName;  //上级资源名称

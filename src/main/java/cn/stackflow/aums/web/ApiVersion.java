@@ -6,4 +6,5 @@ package cn.stackflow.aums.web;
  */
 public final class ApiVersion {
     public final static String VERSION = "/api/v1";
+    public final static String OPEN_API_VERSION = "/nix/systems/v1";
 }

@@ -15,5 +15,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DictPageDTO {
     private String code;//code
-    private DictDTO dict;//字典
+    private DictValueDTO dict;//字典
 }

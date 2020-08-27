@@ -24,6 +24,9 @@ public class User extends BaseEntity {
     private static final long serialVersionUID = 7158444941356667514L;
 
     @Column
+    private String appId;//应用Id
+
+    @Column
     private String username;//账号
     @JsonIgnore
     @Column
@@ -32,8 +35,6 @@ public class User extends BaseEntity {
     private String name;//姓名
     @Column
     private String phone;//手机号
-
-
     @JsonIgnore
     @Column
     private String salt;//盐

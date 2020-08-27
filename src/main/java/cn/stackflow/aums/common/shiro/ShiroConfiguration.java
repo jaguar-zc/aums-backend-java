@@ -98,6 +98,7 @@ public class ShiroConfiguration {
         map.put(ApiVersion.VERSION + "/common/**", "anon");
 //        map.put(ApiVersion.VERSION + "/**", "anonc");
         map.put(ApiVersion.VERSION + "/**", "jwt");
+        map.put(ApiVersion.OPEN_API_VERSION + "/**", "anon");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
         return shiroFilterFactoryBean;

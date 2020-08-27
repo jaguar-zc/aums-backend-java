@@ -21,6 +21,8 @@ public class Role extends BaseEntity {
 
     private static final long serialVersionUID = 7778137776336335417L;
 
+    @Column
+    private String appId;//应用Id
 
     @Column
     private String name;//角色名称

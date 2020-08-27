@@ -1,12 +1,14 @@
 package cn.stackflow.aums.domain.service.impl;
 
-import cn.stackflow.aums.common.bean.DictDTO;
+import cn.stackflow.aums.common.bean.DictTypeDTO;
+import cn.stackflow.aums.common.bean.DictValueDTO;
 import cn.stackflow.aums.common.bean.PageResult;
 import cn.stackflow.aums.common.utils.StringUtils;
-import cn.stackflow.aums.domain.entity.Dict;
-import cn.stackflow.aums.domain.entity.OperLogs;
+import cn.stackflow.aums.domain.entity.DictType;
+import cn.stackflow.aums.domain.entity.DictValue;
 import cn.stackflow.aums.domain.entity.User;
-import cn.stackflow.aums.domain.repository.DictRepository;
+import cn.stackflow.aums.domain.repository.DictTypeRepository;
+import cn.stackflow.aums.domain.repository.DictValueRepository;
 import cn.stackflow.aums.domain.service.DictService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,91 +33,95 @@ import java.util.stream.Collectors;
 public class DictServiceImpl implements DictService {
 
     @Autowired
-    DictRepository dictRepository;
+    DictTypeRepository dictTypeRepository;
 
+    @Autowired
+    DictValueRepository dictValueRepository;
 
     @Override
-    public PageResult<DictDTO> list(PageResult page, String name) {
+    public PageResult<DictTypeDTO> getTypeList(PageResult page) {
         PageRequest of = PageRequest.of(page.getPage() - 1, page.getSize());
-        Specification<Dict> specification = new Specification<Dict>() {
+        Specification<DictType> specification = new Specification<DictType>() {
             @Override
-            public javax.persistence.criteria.Predicate toPredicate(Root<Dict> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+            public javax.persistence.criteria.Predicate toPredicate(Root<DictType> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
-                if (StringUtils.isNotEmpty(name)) {
-                    predicates.add(criteriaBuilder.equal(root.get("dataCode"), name));
-                }
+//                if (StringUtils.isNotEmpty(name)) {
+//                    predicates.add(criteriaBuilder.equal(root.get("dataCode"), name));
+//                }
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
-        Page<Dict> deptPage = dictRepository.findAll(specification,of);
+        Page<DictType> deptPage = dictTypeRepository.findAll(specification, of);
         page.setTotal(deptPage.getTotalElements());
         page.setRows(deptPage.getContent().stream().map(item -> {
-            DictDTO dept = new DictDTO();
-            dept.setDataCode(item.getDataCode());
-            dept.setDataValue(item.getDataValue());
-            dept.setDataDesc(item.getDataDesc());
+            DictTypeDTO dept = new DictTypeDTO();
+            dept.setId(item.getId());
+            dept.setAppId(item.getAppId());
+            dept.setName(item.getDictName());
+            dept.setDesc(item.getDictDesc());
             return dept;
         }).collect(Collectors.toList()));
         return page;
     }
 
     @Override
-    public DictDTO get(String code) {
-        Optional<Dict> optionalDict = dictRepository.findByDataCode(code);
-        if(!optionalDict.isPresent()){
-            return null;
-        }
-        Dict dict = optionalDict.get();
-        DictDTO dictDTO = new DictDTO();
-        dictDTO.setDataCode(dict.getDataCode());
-        dictDTO.setDataValue(dict.getDataValue());
-        dictDTO.setDataDesc(dict.getDataDesc());
-        return dictDTO;
-    }
-
-
-    @Override
-    public DictDTO get(String code, String defaultValue) {
-        DictDTO dictDTO = this.get(code);
-        if (dictDTO != null) {
-            return dictDTO;
-        }
-        Dict dict = new Dict();
-        dict.setDataCode(code);
-        dict.setDataValue(defaultValue);
-        dict.setDataDesc("");
-        dict = dictRepository.save(dict);
-        dictDTO = new DictDTO();
-        dictDTO.setDataCode(dict.getDataCode());
-        dictDTO.setDataValue(dict.getDataValue());
-        dictDTO.setDataDesc(dict.getDataDesc());
-        return dictDTO;
+    public PageResult<DictValueDTO> getValueList(PageResult page, String dictTypeId) {
+        PageRequest of = PageRequest.of(page.getPage() - 1, page.getSize());
+        Specification<DictValue> specification = new Specification<DictValue>() {
+            @Override
+            public javax.persistence.criteria.Predicate toPredicate(Root<DictValue> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                if (StringUtils.isNotEmpty(dictTypeId)) {
+                    predicates.add(criteriaBuilder.equal(root.get("dictTypeId"), dictTypeId));
+                }
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        Page<DictValue> deptPage = dictValueRepository.findAll(specification, of);
+        page.setTotal(deptPage.getTotalElements());
+        page.setRows(deptPage.getContent().stream().map(item -> {
+            DictValueDTO dictValue = new DictValueDTO();
+            dictValue.setDataCode(item.getDataCode());
+            dictValue.setDataValue(item.getDataValue());
+            return dictValue;
+        }).collect(Collectors.toList()));
+        return page;
     }
 
     @Override
-    public void create(User user, DictDTO deptDTO) {
-        Dict dict  = new Dict();
-        dict.setDataCode(deptDTO.getDataCode());
-        dict.setDataValue(deptDTO.getDataValue());
-        dict.setDataDesc(deptDTO.getDataDesc());
-        dictRepository.save(dict);
+    public void createDictType(User user, DictTypeDTO dictTypeDTO) {
+        DictType dictType = new DictType();
+        dictType.setAppId(dictTypeDTO.getAppId());
+        dictType.setDictName(dictTypeDTO.getName());
+        dictType.setDictDesc(dictTypeDTO.getDesc());
+        dictTypeRepository.save(dictType);
     }
 
     @Override
-    public void update(String code,String value){
-        Optional<Dict> byDataCode = dictRepository.findByDataCode(code);
-        if (byDataCode.isPresent()) {
-            Dict dict = byDataCode.get();
-            dict.setDataValue(value);
-            dictRepository.save(dict);
-        }
+    public void createDictValue(User user, DictValueDTO dictTypeDTO) {
+        DictValue dictValue = new DictValue();
+        dictValue.setDataCode(dictTypeDTO.getDataCode());
+        dictValue.setDataValue(dictTypeDTO.getDataValue());
+        dictValue.setDictTypeId(dictTypeDTO.getDictTypeId());
+        dictValueRepository.save(dictValue);
     }
 
     @Override
-    public void delete(String code) {
-        Optional<Dict> optionalDict = dictRepository.findByDataCode(code);
-        if(optionalDict.isPresent()){
-            dictRepository.delete(optionalDict.get());
-        }
+    public void updateDictType(DictTypeDTO dictTypeDTO) {
+        DictType dictType = dictTypeRepository.getOne(dictTypeDTO.getId());
+        dictType.setAppId(dictTypeDTO.getAppId());
+        dictType.setDictName(dictTypeDTO.getName());
+        dictType.setDictDesc(dictTypeDTO.getDesc());
+        dictTypeRepository.save(dictType);
+    }
+
+    @Override
+    public void deleteDictType(String id) {
+        dictTypeRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteDictValue(String id) {
+        dictValueRepository.deleteById(id);
     }
 }

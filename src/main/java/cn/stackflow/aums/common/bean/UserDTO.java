@@ -16,6 +16,7 @@ import java.util.List;
 public class UserDTO {
 
     private String id;
+    private String appId;//应用ID
     @NotEmpty
     @Pattern(regexp = "^[A-Za-z0-9_-]{6,20}$", message = "账号仅允许数字字母下划线6-20位")
     private String username;//账号

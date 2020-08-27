@@ -15,6 +15,7 @@ import java.util.List;
 public class RoleDTO {
 
     private String id;
+    private String appId;//应用Id
     @NotEmpty
     private String name;//角色名
     private String code;//角色编码

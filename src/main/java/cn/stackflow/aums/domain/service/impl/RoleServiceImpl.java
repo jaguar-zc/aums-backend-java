@@ -59,6 +59,7 @@ public class RoleServiceImpl implements RoleService {
                             .filter(i -> i.getResourceLevel() == 1).map(i -> {
                                 ResourceDTO resourceDTO = new ResourceDTO();
                                 resourceDTO.setId(i.getId());
+                                resourceDTO.setAppId(i.getAppId());
                                 resourceDTO.setCode(i.getCode());
                                 resourceDTO.setName(i.getName());
                                 resourceDTO.setRemark(i.getRemark());
@@ -80,6 +81,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void add(User user, RoleDTO roleDTO) {
         Role role = new Role();
+        role.setAppId(roleDTO.getAppId());
         role.setName(roleDTO.getName());
         role.setCode(roleDTO.getCode());
         role.setRemark(roleDTO.getRemark());
@@ -97,6 +99,7 @@ public class RoleServiceImpl implements RoleService {
             throw new ServiceException("角色不存在");
         }
         Role role = roleOptional.get();
+        role.setAppId(roleDTO.getAppId());
         role.setRemark(roleDTO.getRemark());
         Set<Resource> resources = role.getResources();
         resources.clear();

@@ -18,6 +18,10 @@ public class Dept extends BaseEntity {
 
     private static final long serialVersionUID = 3375021962848745018L;
 
+
+    @Column
+    private String appId;//应用Id
+
     @Column
     private String name;//部门名称
 

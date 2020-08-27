@@ -1,6 +1,7 @@
 package cn.stackflow.aums.domain.service;
 
-import cn.stackflow.aums.common.bean.DictDTO;
+import cn.stackflow.aums.common.bean.DictTypeDTO;
+import cn.stackflow.aums.common.bean.DictValueDTO;
 import cn.stackflow.aums.common.bean.PageResult;
 import cn.stackflow.aums.domain.entity.User;
 
@@ -10,15 +11,18 @@ import cn.stackflow.aums.domain.entity.User;
  */
 public interface DictService {
 
-    PageResult<DictDTO> list(PageResult page, String name);
+    PageResult<DictTypeDTO> getTypeList(PageResult page);
 
-    DictDTO get(String code);
+    PageResult<DictValueDTO> getValueList(PageResult page, String dictTypeId);
 
-    DictDTO get(String code, String defaultValue);
+    void createDictType(User user, DictTypeDTO dictType);
 
-    void update(String code, String value);
+    void createDictValue(User user, DictValueDTO dictValue);
 
-    void delete(String code);
+    void updateDictType(DictTypeDTO dictType);
 
-    void create(User user, DictDTO deptDTO);
+    void deleteDictType(String id);
+
+    void deleteDictValue(String id);
+
 }

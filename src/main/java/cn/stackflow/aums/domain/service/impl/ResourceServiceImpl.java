@@ -119,6 +119,7 @@ public class ResourceServiceImpl implements ResourceService {
     private ResourceDTO convertResource(Resource resource) {
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setId(resource.getId());
+        resourceDTO.setAppId(resource.getAppId());
         resourceDTO.setCode(resource.getCode());
         resourceDTO.setName(resource.getName());
         resourceDTO.setRemark(resource.getRemark());
@@ -182,6 +183,7 @@ public class ResourceServiceImpl implements ResourceService {
         page.setRows(deptPage.getContent().stream().map(item -> {
             ResourceDTO resourceDTO = new ResourceDTO();
             resourceDTO.setId(item.getId());
+            resourceDTO.setAppId(item.getAppId());
             resourceDTO.setName(item.getName());
             resourceDTO.setRemark(item.getRemark());
             resourceDTO.setType(item.getType());
@@ -206,6 +208,7 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public void create(User user, ResourceDTO resourceDTO) {
         Resource resource = new Resource();
+        resource.setAppId(resourceDTO.getAppId());
         resource.setParentId(resourceDTO.getParentId());
         resource.setCode(resourceDTO.getCode());
         resource.setName(resourceDTO.getName());
@@ -222,6 +225,7 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public void update(User user, ResourceDTO resourceDTO) {
         Resource resource = resourceRepository.getOne(resourceDTO.getId());
+        resource.setAppId(resourceDTO.getAppId());
         resource.setParentId(resourceDTO.getParentId());
         resource.setCode(resourceDTO.getCode());
         resource.setName(resourceDTO.getName());

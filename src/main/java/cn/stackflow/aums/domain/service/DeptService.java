@@ -19,9 +19,6 @@ public interface DeptService {
 
     void update(User user, DeptDTO deptDTO);
 
-    void remove(User user, String id);
-
-    List<DeptMemberDTO> listMember(String deptId);
-
     void delete(User user, String id);
+    List<DeptMemberDTO> listMember(String deptId);
 }

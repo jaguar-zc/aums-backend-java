@@ -24,6 +24,9 @@ public class Resource extends BaseEntity {
     private static final long serialVersionUID = -4299116402833379115L;
 
     @Column
+    private String appId;//应用Id
+
+    @Column
     private String parentId;//所属父级权限ID  0,1,2
 
     @Column

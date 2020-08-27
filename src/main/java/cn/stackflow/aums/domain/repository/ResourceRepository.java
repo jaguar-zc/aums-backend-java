@@ -25,4 +25,6 @@ public interface ResourceRepository extends JpaRepository<Resource, String>, Jpa
     List<String> findResourceIdsByRoleId(@Param("roleId") String roleId);
 
     Optional<Resource> findByAppId(String appId);
+
+    void deleteByAppId(String appId);
 }

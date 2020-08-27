@@ -161,15 +161,16 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public PageResult<ResourceDTO> list(PageResult page, String parentId, String name) {
+    public PageResult<ResourceDTO> list(PageResult page, String appId, String name) {
         PageRequest of = PageRequest.of(page.getPage() - 1, page.getSize(), Sort.by(Sort.Direction.ASC,"sort"));
 
         Specification<Resource> specification = new Specification<Resource>() {
             @Override
             public javax.persistence.criteria.Predicate toPredicate(Root<Resource> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
-                if (StringUtils.isNotEmpty(parentId)) {
-                    predicates.add(criteriaBuilder.equal(root.get("parentId"), parentId));
+                predicates.add(criteriaBuilder.equal(root.get("resourceLevel"), 1));
+                if (StringUtils.isNotEmpty(appId)) {
+                    predicates.add(criteriaBuilder.equal(root.get("appId"), appId));
                 }
                 if (StringUtils.isNotEmpty(name)) {
                     predicates.add(criteriaBuilder.like(root.get("name"), "%"+name+"%"));
@@ -180,29 +181,33 @@ public class ResourceServiceImpl implements ResourceService {
 
         Page<Resource> deptPage = resourceRepository.findAll(specification,of);
         page.setTotal(deptPage.getTotalElements());
-        page.setRows(deptPage.getContent().stream().map(item -> {
-            ResourceDTO resourceDTO = new ResourceDTO();
-            resourceDTO.setId(item.getId());
-            resourceDTO.setAppId(item.getAppId());
-            resourceDTO.setName(item.getName());
-            resourceDTO.setRemark(item.getRemark());
-            resourceDTO.setType(item.getType());
-            resourceDTO.setSort(item.getSort());
-            resourceDTO.setUri(item.getUri());
-            resourceDTO.setEnable(item.getEnable());
-            resourceDTO.setCode(item.getCode());
-            resourceDTO.setIcon(item.getIcon());
-            resourceDTO.setParentId(item.getParentId());
-            if (StringUtils.isNotEmpty(item.getParentId())) {
-                String pid = item.getParentId();
-                Optional<Resource> resourceOptional = resourceRepository.findById(pid);
-                if (resourceOptional.isPresent()) {
-                    resourceDTO.setParentName(resourceOptional.get().getName());
-                }
-            }
+        page.setRows(deptPage.getContent().stream().map(item ->{
+            ResourceDTO resourceDTO = convertToResourceDTO(item);
+            resourceDTO.setChildList(
+                    resourceRepository.findByEnableAndParentIdOrderBySortAsc(1,item.getId())
+                    .stream()
+                    .map(this::convertToResourceDTO)
+                    .collect(Collectors.toList()));
             return resourceDTO;
         }).collect(Collectors.toList()));
         return page;
+    }
+
+    private ResourceDTO convertToResourceDTO(Resource item){
+        ResourceDTO resourceDTO = new ResourceDTO();
+        resourceDTO.setId(item.getId());
+        resourceDTO.setAppId(item.getAppId());
+        resourceDTO.setResourceLevel(item.getResourceLevel());
+        resourceDTO.setName(item.getName());
+        resourceDTO.setRemark(item.getRemark());
+        resourceDTO.setType(item.getType());
+        resourceDTO.setSort(item.getSort());
+        resourceDTO.setUri(item.getUri());
+        resourceDTO.setEnable(item.getEnable());
+        resourceDTO.setCode(item.getCode());
+        resourceDTO.setIcon(item.getIcon());
+        resourceDTO.setParentId(item.getParentId());
+        return resourceDTO;
     }
 
     @Override

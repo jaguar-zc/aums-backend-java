@@ -22,6 +22,7 @@ public class ResourceDTO {
     private String parentName;  //上级资源名称
     private Resource.ResourceType type;//资源类型： 分组、模块、操作
     private String uri;     //URI规则 多个用逗号分开
+    private Integer resourceLevel;//深度 1,2,3
     private Integer enable; //1启用;0停用
     private String code;    //权限CODE唯一代码
     private Integer sort;    //权限CODE唯一代码

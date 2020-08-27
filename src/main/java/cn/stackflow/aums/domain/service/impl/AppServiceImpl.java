@@ -82,5 +82,6 @@ public class AppServiceImpl implements AppService {
     @Override
     public void delete(String id) {
         appRepository.deleteById(id);
+        resourceRepository.deleteByAppId(id);
     }
 }

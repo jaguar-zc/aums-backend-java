@@ -22,8 +22,8 @@ spring:
   jpa:
 #    database-platform: org.hibernate.dialect.Oracle10gDialect
     database-platform: org.hibernate.dialect.MySQL57Dialect
-    show-sql: true
+    show-sql: false
     hibernate:
-      format_sql: true
+      format_sql: false
       ddl-auto: update
   token-expire: 86400

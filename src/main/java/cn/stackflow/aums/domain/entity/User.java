@@ -18,13 +18,8 @@ import java.util.List;
 @Entity
 public class User extends BaseEntity {
 
-
     public final static String USER_ROLE_SEGMENT = ",";
-
     private static final long serialVersionUID = 7158444941356667514L;
-
-    @Column
-    private String appId;//应用Id
 
     @Column
     private String username;//账号

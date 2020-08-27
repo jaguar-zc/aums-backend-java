@@ -14,7 +14,7 @@ import javax.persistence.Table;
  */
 @Getter
 @Setter
-@Table(name = "t_sys_dept")
+@Table(name = "t_sys_app")
 @Entity
 public class App {
     @Id

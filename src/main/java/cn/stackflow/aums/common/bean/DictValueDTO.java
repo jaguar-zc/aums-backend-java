@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DictValueDTO {
+    private String id;
     private String dictTypeId;
     private String dataCode;
     private String dataValue;

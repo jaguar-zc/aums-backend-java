@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author: zhangc/jaguar_zc@sina.com
@@ -22,4 +23,6 @@ public interface ResourceRepository extends JpaRepository<Resource, String>, Jpa
 
     @Query(value = "select resource_id from t_sys_role_resource where role_id =:roleId",nativeQuery = true)
     List<String> findResourceIdsByRoleId(@Param("roleId") String roleId);
+
+    Optional<Resource> findByAppId(String appId);
 }

@@ -96,7 +96,6 @@ public class UserServiceImpl implements UserService {
         }
         User user = userOptional.get();
         UserDTO userDTO = new UserDTO();
-        userDTO.setAppId(user.getAppId());
         userDTO.setId(user.getId());
         userDTO.setUsername(user.getUsername());
         userDTO.setName(user.getName());
@@ -137,7 +136,6 @@ public class UserServiceImpl implements UserService {
         Assert.isTrue(userRepository.countByUsername(userDTO.getUsername()) == 0, "用户名已存在");
 //        Assert.isTrue(userRepository.countByPhone(userDTO.getPhone()) == 0,"手机号已存在");
         User user = new User();
-        user.setAppId(userDTO.getAppId());
         user.setUsername(userDTO.getUsername());
         user.setPassword(userDTO.getPassword());
         user.setName(userDTO.getName());
@@ -215,7 +213,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void update(UserDTO userDTO) {
         User user = userRepository.getOne(userDTO.getId());
-        user.setAppId(userDTO.getAppId());
         user.setUsername(userDTO.getUsername());
         user.setName(userDTO.getName());
         user.setPhone(userDTO.getPhone());

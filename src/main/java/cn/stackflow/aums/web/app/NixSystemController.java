@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(ApiVersion.OPEN_API_VERSION+"/cmd")
-public class OpenAppController {
+public class NixSystemController implements NixSystemClient {
 
 
 

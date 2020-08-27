@@ -33,7 +33,7 @@ public class Role extends BaseEntity {
     @Column
     private String remark;//角色名称
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.REFRESH,fetch = FetchType.LAZY)
     @JoinTable(name = "t_sys_role_resource", joinColumns = {@JoinColumn(name = "role_id")}, inverseJoinColumns = {@JoinColumn(name = "resource_id")})
     private Set<Resource> resources = new HashSet<Resource>();
 

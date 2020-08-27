@@ -81,6 +81,8 @@ public class DictServiceImpl implements DictService {
         page.setTotal(deptPage.getTotalElements());
         page.setRows(deptPage.getContent().stream().map(item -> {
             DictValueDTO dictValue = new DictValueDTO();
+            dictValue.setId(item.getId());
+            dictValue.setDictTypeId(dictTypeId);
             dictValue.setDataCode(item.getDataCode());
             dictValue.setDataValue(item.getDataValue());
             return dictValue;
@@ -118,6 +120,7 @@ public class DictServiceImpl implements DictService {
     @Override
     public void deleteDictType(String id) {
         dictTypeRepository.deleteById(id);
+        dictValueRepository.deleteByDictTypeId(id);
     }
 
     @Override

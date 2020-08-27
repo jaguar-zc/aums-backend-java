@@ -113,11 +113,8 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void delete(User user, String id) {
-        Optional<Role> roleOptional = roleRepository.findById(id);
-        if (roleOptional.isPresent()) {
-            Role role = roleOptional.get();
-            roleRepository.delete(role);
-        }
+        roleRepository.deleteRoleResourceByRoleId(id);
+        roleRepository.deleteById(id);
     }
 
 

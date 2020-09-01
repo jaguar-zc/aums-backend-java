@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class Constants {
 
+    public static final int RESOURCE_LEVEL_ROOT = 0;
     public static final int FLAG_TRUE = 1;
     public static final int FLAG_FALSE = 0;
     public static final String OPER_TYPE_LOGIN = "登录";

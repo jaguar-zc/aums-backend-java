@@ -68,7 +68,7 @@ public class AppServiceImpl implements AppService {
         app1.setName(app.getName());
         appRepository.save(app1);
 
-        Optional<Resource> resourceOptional = resourceRepository.findByAppId(app.getAppId());
+        Optional<Resource> resourceOptional = resourceRepository.findByTypeAndAppId(ResourceType.APP,app.getAppId());
         if(!resourceOptional.isPresent()){
             return;
         }

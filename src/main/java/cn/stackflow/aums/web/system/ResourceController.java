@@ -29,18 +29,6 @@ public class ResourceController {
     @Autowired
     ResourceService resourceService;
 
-    @ApiOperation("菜单列表")
-    @GetMapping("/menu")
-    public Result<List<ResourceMenuDTO>> getMenu(MenuType menuType){
-        User user = UserContextHolder.currentUser();
-        if(menuType == MenuType.ALL){
-            return ResultBuilder.success(ResourceMenuDTO.convert(resourceService.getAllResourceList()));
-        }
-        if(menuType == MenuType.ME){
-            return ResultBuilder.success(ResourceMenuDTO.convert(resourceService.getResourceListByUserId(user.getId())));
-        }
-        return ResultBuilder.fail("不支持的类型");
-    }
 
     @ApiOperation("根据角色ID获取菜单列表")
     @GetMapping("/role/{roleId}")
@@ -55,6 +43,12 @@ public class ResourceController {
                                                 @RequestParam(value = "appId",required = false) String appId,
                                                 @RequestParam(value = "name",required = false) String name) {
         return ResultBuilder.success(resourceService.list(page,appId,name));
+    }
+
+    @ApiOperation("资源列表")
+    @GetMapping("/lazy")
+    public Result<List<ResourceDTO>> listLazy(@RequestParam(value = "parentId",required = false) String parentId) {
+        return ResultBuilder.success(resourceService.listLazy(parentId));
     }
 
     @OperLog(operModul = "资源",operType = Constants.OPER_TYPE_ADD,operDesc = "创建资源")

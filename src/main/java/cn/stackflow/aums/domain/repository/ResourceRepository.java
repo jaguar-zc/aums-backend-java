@@ -24,7 +24,9 @@ public interface ResourceRepository extends JpaRepository<Resource, String>, Jpa
     @Query(value = "select resource_id from t_sys_role_resource where role_id =:roleId",nativeQuery = true)
     List<String> findResourceIdsByRoleId(@Param("roleId") String roleId);
 
-    Optional<Resource> findByAppId(String appId);
+    Optional<Resource> findByTypeAndAppId(Resource.ResourceType type,String appId);
 
     void deleteByAppId(String appId);
+
+    int countByParentId(String parentId);
 }

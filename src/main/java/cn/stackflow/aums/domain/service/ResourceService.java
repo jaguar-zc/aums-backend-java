@@ -13,9 +13,7 @@ import java.util.List;
  */
 public interface ResourceService {
 
-    List<ResourceDTO> getResourceListByUserId(String id);
-
-    List<ResourceDTO> getAllResourceList();
+    List<ResourceDTO> getResourceListByUserId(String userId);
 
     ResourceDTO getResource(String id);
 
@@ -27,5 +25,10 @@ public interface ResourceService {
 
     void delete(User user, String id);
 
+    List<ResourceDTO>  getResourceListByRoleIdAndAppID(List<String> roleId,String appId);
+
     List<ResourceUiDTO> getResourceListByRoleId(String roleId);
+
+    List<ResourceDTO> listLazy(String parentId);
+
 }

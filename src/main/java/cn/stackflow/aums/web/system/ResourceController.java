@@ -30,6 +30,21 @@ public class ResourceController {
     ResourceService resourceService;
 
 
+
+    @ApiOperation("菜单列表")
+    @GetMapping("/menu")
+    public Result<List<ResourceMenuDTO>> getMenu(MenuType menuType){
+        User user = UserContextHolder.currentUser();
+        if(menuType == MenuType.ALL || user.getUsername().equals("admin")){
+            return ResultBuilder.success(ResourceMenuDTO.convert(resourceService.getAllResourceList()));
+        }
+        if(menuType == MenuType.ME){
+            return ResultBuilder.success(ResourceMenuDTO.convert(resourceService.getResourceListByUserId(user.getId())));
+        }
+        return ResultBuilder.fail("不支持的类型");
+    }
+
+
     @ApiOperation("根据角色ID获取菜单列表")
     @GetMapping("/role/{roleId}")
     public Result<List<ResourceUiDTO>> getResourceListByRoleId(@PathVariable("roleId") String roleId){

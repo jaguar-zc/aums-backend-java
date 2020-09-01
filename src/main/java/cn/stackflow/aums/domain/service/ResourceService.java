@@ -31,4 +31,5 @@ public interface ResourceService {
 
     List<ResourceDTO> listLazy(String parentId);
 
+    List<ResourceDTO> getAllResourceList();
 }

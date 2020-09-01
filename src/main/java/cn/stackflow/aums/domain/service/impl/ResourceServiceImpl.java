@@ -43,6 +43,13 @@ public class ResourceServiceImpl implements ResourceService {
     @Autowired
     RoleRepository roleRepository;
 
+
+    @Override
+    public List<ResourceDTO> getAllResourceList() {
+        List<Resource> list = resourceRepository.findByEnableAndResourceLevelOrderBySortAsc(Constants.FLAG_TRUE, 1);
+        return list.stream().map(Resource::getId).map(this::getResource).collect(Collectors.toList());
+    }
+
     @Override
     public List<ResourceDTO> getResourceListByUserId(String userId) {
         Optional<User> userOptional = userRepository.findById(userId);

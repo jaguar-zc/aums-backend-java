@@ -35,7 +35,6 @@ public class UserController {
         return ResultBuilder.success(pageResult);
     }
 
-
     @ApiOperation("获取个人信息")
     @GetMapping("/info")
     public Result<UserDTO> info() {

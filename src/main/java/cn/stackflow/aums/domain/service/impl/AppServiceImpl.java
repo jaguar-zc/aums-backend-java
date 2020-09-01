@@ -1,5 +1,7 @@
 package cn.stackflow.aums.domain.service.impl;
+import cn.stackflow.aums.common.utils.StringUtils;
 import cn.stackflow.aums.domain.entity.Resource.ResourceType;
+import cn.stackflow.aums.web.app.pojo.BaseReq;
 import com.google.common.collect.Sets;
 
 import cn.stackflow.aums.common.bean.PageResult;
@@ -83,5 +85,15 @@ public class AppServiceImpl implements AppService {
     public void delete(String id) {
         appRepository.deleteById(id);
         resourceRepository.deleteByAppId(id);
+    }
+
+    @Override
+    public void checkApp(BaseReq req) {
+        Assert.hasLength(req.getAppId(),"AppId不能为空");
+        Assert.hasLength(req.getSecret(),"Secret不能为空");
+        Optional<App> appOptional = appRepository.findById(req.getAppId());
+        Assert.isTrue(appOptional.isPresent(),"AppID错误");
+        App app = appOptional.get();
+        Assert.isTrue(StringUtils.equals(app.getSecret(),req.getSecret()),"Secret错误");
     }
 }

@@ -8,6 +8,7 @@ import cn.stackflow.aums.common.utils.StringUtils;
 import cn.stackflow.aums.domain.entity.Dept;
 import cn.stackflow.aums.domain.entity.Role;
 import cn.stackflow.aums.domain.entity.User;
+import cn.stackflow.aums.domain.service.AppService;
 import cn.stackflow.aums.domain.service.ResourceService;
 import cn.stackflow.aums.domain.service.RoleService;
 import cn.stackflow.aums.domain.service.UserService;
@@ -44,6 +45,8 @@ public class NixSystemController implements NixSystemClient {
 
     @Autowired
     ResourceService resourceService;
+    @Autowired
+    AppService appService;
 
 
     /**
@@ -55,6 +58,7 @@ public class NixSystemController implements NixSystemClient {
     @PostMapping("/login")
     @Override
     public Result<NixSystemUserDTO> login(@RequestBody NixSystemLoginDTO login) {
+        appService.checkApp(login);
 
         Optional<User> userOptional = userService.getUserInfoByUsername(login.getUsername());
         if(!userOptional.isPresent()){
@@ -103,6 +107,7 @@ public class NixSystemController implements NixSystemClient {
     @PostMapping("/getMenuList")
     @Override
     public Result<List<NixSystemResourceDTO>> getMenuList(@RequestBody NixSystemMenuDTO menuDTO) {
+        appService.checkApp(menuDTO);
         User user = userService.get(menuDTO.getUserId());
         List<ResourceDTO> list = resourceService.getResourceListByRoleIdAndAppID(user.getRoleIds(), menuDTO.getAppId());
         List<NixSystemResourceDTO> collect = list.stream()

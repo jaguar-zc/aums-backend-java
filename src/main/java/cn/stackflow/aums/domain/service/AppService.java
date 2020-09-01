@@ -2,6 +2,8 @@ package cn.stackflow.aums.domain.service;
 
 import cn.stackflow.aums.common.bean.PageResult;
 import cn.stackflow.aums.domain.entity.App;
+import cn.stackflow.aums.web.app.pojo.BaseReq;
+import cn.stackflow.aums.web.app.pojo.NixSystemLoginDTO;
 
 /**
  * @author: zhangc/jaguar_zc@sina.com
@@ -17,4 +19,5 @@ public interface AppService {
 
     void delete(String id);
 
+    void checkApp(BaseReq req);
 }

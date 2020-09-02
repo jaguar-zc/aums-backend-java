@@ -49,7 +49,7 @@ public class JVMResource {
         return fmtI.format((long) (size / 1024)) + " kbytes";
     }
 
-    protected static String toDuration(double uptime) {
+    protected static String toDuration(long uptime) {
         uptime /= 1000;
         if (uptime < 60) {
             return fmtD.format(uptime) + " seconds";
@@ -78,6 +78,10 @@ public class JVMResource {
             s += " " + fmtI.format(hours) + (hours > 1 ? " hours" : " hour");
         }
         return s;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(toDuration(111002032323L));
     }
 
 }
